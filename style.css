@@ -1,0 +1,85 @@
+body {
+    background-color: dimgrey;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    width: 70%; 
+    border: 2px solid #000000;
+    border-radius: 10px;
+    padding: 50px;
+}
+.session-msg{
+    width: 100%;
+}
+
+.above{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    color: red;
+    font-weight: bold;
+}
+.below{
+    display: flex;
+    flex-direction: row;
+}
+
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40%; 
+}
+
+.sql-table {
+    width: 60%; 
+    margin-left: 20px;
+}
+
+
+
+.edit-container {
+    background-color: white;
+    width: 70%; 
+    border: 2px solid #000000;
+    border-radius: 10px;
+    padding: 20px; 
+}
+.edit-div{
+    padding: 10px;
+    border-radius: 10px;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.edit-legend {
+    font-size: 1.5em;
+    color: green;
+    margin-bottom: 10px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.edit-input {
+    width:auto;
+}
+
+.edit-user-deleted{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: red;
+    font-size: 35px;
+}
+
