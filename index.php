@@ -84,14 +84,20 @@ unset($_SESSION["ID"]);
                     }
 
                     if ($isInserted) 
-                        {
-                            header("Location: index.php");      
-                            exit();                             
-                        } 
-                        else 
-                        {
-                            echo "errorCreateor: " . $sql . "<br>" . mysqli_errorCreateor($conn);
-                        }
+                    {
+                        $sql = "SELECT customer_id FROM customer WHERE first_name = '$first_name' AND last_name = '$last_name' AND birthDate = $birthDate;";    
+                        $createdCustomerID = $conn->query($sql);
+                        
+                        $customerID = $createdCustomerID->fetch_all(MYSQLI_ASSOC);
+                        echo $customerID["customer_id"];
+                        
+                        //header("Location: index.php");      
+                        //exit();                             
+                    } 
+                    else 
+                    {
+                        echo "errorCreateor: " . $sql . "<br>" . mysqli_errorCreateor($conn);
+                    }
                 }
             }
             ?>
