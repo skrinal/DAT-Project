@@ -25,6 +25,12 @@ require_once("connect.php");
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
+
+    <?php
+    require_once("header.php");
+    ?>
+    
+<div class="main-content">
     <div class="edit-container" >
     <?php
 
@@ -132,6 +138,11 @@ require_once("connect.php");
         </div>
 
     </div>
+</div>
+
+    <?php
+    require_once("footer.php");
+    ?>
 
 </body>
 </html>

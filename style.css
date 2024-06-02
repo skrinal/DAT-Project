@@ -3,9 +3,111 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    flex-direction: column;
     margin: 0;
+    padding: 0;
+    height: 100vh;
 }
+
+
+/* Chatgpt */
+.header {
+    width: 100%;
+    background-color: #333;
+    padding: 10px 0;
+    
+    top: 0;
+}
+
+.header nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.header nav ul li {
+    margin: 0 15px;
+}
+
+.header nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.header nav ul li a:hover {
+    text-decoration: underline;
+}
+
+
+.main-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 80px 0; /* height of the header */
+}
+
+
+
+.footer {
+    width: 100%;
+    background-color: #333;
+    color: white;
+    padding: 15px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+.footer-content {
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.footer-section {
+    flex: 1;
+    margin: 10px;
+}
+
+.footer-section h2 {
+    margin-bottom: 10px;
+}
+
+.footer-section ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.footer-section ul li {
+    margin: 5px 0;
+}
+
+.footer-section ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+.footer-section ul li a:hover {
+    text-decoration: underline;
+}
+
+.footer-bottom {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+
+/* Chatgpt */
+
+
 
 .container {
     background-color: white;
@@ -16,11 +118,12 @@ body {
     border-radius: 10px;
     padding: 50px;
 }
-.session-msg{
+
+.session-msg {
     width: 100%;
 }
 
-.above{
+.above {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -29,7 +132,8 @@ body {
     color: red;
     font-weight: bold;
 }
-.below{
+
+.below {
     display: flex;
     flex-direction: row;
 }
@@ -46,8 +150,6 @@ body {
     margin-left: 20px;
 }
 
-
-
 .edit-container {
     background-color: white;
     width: 70%; 
@@ -55,7 +157,8 @@ body {
     border-radius: 10px;
     padding: 20px; 
 }
-.edit-div{
+
+.edit-div {
     padding: 10px;
     border-radius: 10px;
     background-color: white;
@@ -63,6 +166,7 @@ body {
     justify-content: center;
     align-items: center;
 }
+
 .edit-legend {
     font-size: 1.5em;
     color: green;
@@ -72,14 +176,13 @@ body {
 }
 
 .edit-input {
-    width:auto;
+    width: auto;
 }
 
-.edit-user-deleted{
+.edit-user-deleted {
     display: flex;
     justify-content: center;
     align-items: center;
     color: red;
     font-size: 35px;
 }
-
