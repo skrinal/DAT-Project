@@ -2,14 +2,12 @@
 session_start();
 
 if (!isset($_SESSION["permission"]) || $_SESSION["permission"] !== "yes") {
-    // Redirect
-    header("Location: index.php");
+    header("Location: payment.php");
     exit();
 }
 
 if (!isset($_SESSION["ID"])) {
-    //No payment ID
-    header("Location: index.php");
+    header("Location: payment.php");
     exit();
 }
 
@@ -36,19 +34,28 @@ require_once("connect.php");
 
         if (isset($_POST['DeleteBtn']))
         {
-            $sql = "DELETE FROM payment WHERE payment_id = $payment_id";
-            $isDeleted = $conn->query($sql);
-
-            if ($isDeleted) 
+            $sql = "DELETE FROM payment_details WHERE payment_id = $payment_id";
+            $isDeletedDetails = $conn->query($sql);
+            
+            if ($isDeletedDetails) 
             {   
-                $_SESSION["message"] = "Payment with ID $payment_id has been deleted";
-                sleep(2);
-                header("Location: index.php");      
-                exit();                             
+                $sql = "DELETE FROM payment WHERE payment_id = $payment_id";
+                $isDeleted = $conn->query($sql);
+
+                if ($isDeleted) {
+                    $_SESSION["message"] = "Payment with ID $payment_id has been deleted";
+                    sleep(2);
+                    header("Location: payment.php");      
+                    exit();
+                }
+                else {
+                    echo "Error while deleting payment: " . $sql . "<br>" . mysqli_errorCreateor($conn);
+                }
+                                             
             } 
             else 
             {
-                echo "Error while deleting payment: " . $sql . "<br>" . mysqli_errorCreateor($conn);
+                echo "Error while deleting payment_details: " . $sql . "<br>" . mysqli_errorCreateor($conn);
             }
         }
         else {
@@ -67,7 +74,7 @@ require_once("connect.php");
 
             if ($isDeleted) 
             {
-                header("Location: index.php");      
+                header("Location: payment.php");      
                 exit();                             
             } 
             else 

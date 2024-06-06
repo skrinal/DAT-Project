@@ -13,7 +13,7 @@ if (!isset($_SESSION["ID"])) {
     exit();
 }
 
-$customer_id = $_SESSION["ID"];
+$customerID = $_SESSION["ID"];
 require_once("connect.php");
 
 ?>
@@ -36,12 +36,12 @@ require_once("connect.php");
 
         if (isset($_POST['DeleteBtn']))
         {
-            $sql = "DELETE FROM customer WHERE customer_id = $customer_id";
+            $sql = "DELETE FROM customer WHERE customer_id = $customerID";
             $isDeleted = $conn->query($sql);
 
             if ($isDeleted) 
             {   
-                $_SESSION["message"] = "User with ID $customer_id has been deleted";
+                $_SESSION["message"] = "User with ID $customerID has been deleted";
                 sleep(2);
                 header("Location: index.php");      
                 exit();                             
@@ -54,7 +54,7 @@ require_once("connect.php");
         else {
         ?>
             <div class="edit-legend">
-                Editing user with ID <?php echo $customer_id ?>
+                Editing user with ID <?php echo $customerID ?>
             </div>
         <?php
         }  
@@ -62,22 +62,43 @@ require_once("connect.php");
         
         if (isset($_POST['EditBtn']))
         {
-            $customer_id = $_POST['customer_id']
+            $customer_id = $_POST['customer_id'];
             $first_name = $_POST['first_name'];
-            $last_name = $_POST['first_name'];
-            $birthDate = $_POST['first_name'];
-            $last_payment = $_POST['first_name'];
-            $allergy = $_POST['first_name'];
+            $last_name = $_POST['last_name'];
+            $birthDate = $_POST['birthDate'];
+            $last_payment = $_POST['last_payment'];
+            $allergy = $_POST['allergy'];
 
-            $sql = "DELETE FROM customer WHERE customer_id = $customer_id";
-            $isDeleted = $conn->query($sql);
+            $fieldsToUpdate = [];
+
+            if (!empty($customer_id)) {
+                $fieldsToUpdate[] = "customer_id = '$customer_id'";
+            }
+            if (!empty($first_name)) {
+                $fieldsToUpdate[] = "first_name = '$first_name'";
+            }
+            if (!empty($last_name)) {
+                $fieldsToUpdate[] = "last_name = '$last_name'";
+            }
+            if (!empty($birthDate)) {
+                $fieldsToUpdate[] = "birthDate = '$birthDate'";
+            }
+            if (!empty($last_payment)) {
+                $fieldsToUpdate[] = "last_payment = '$last_payment'";
+            }
+            if (!empty($allergy)) {
+                $fieldsToUpdate[] = "allergy = '$allergy'";
+            }
+
+            $sql = "UPDATE customer SET " . implode(', ', $fieldsToUpdate) . " WHERE customer_id = '$customerID'";
+            $isUpdated = $conn->query($sql);;
 
 
-
-            if ($isDeleted) 
+            if ($isUpdated) 
             {
-                //header("Location: index.php");      
-                //exit();                             
+                $_SESSION["message"] = "User with ID $customerID has been updated successfully";
+                header("Location: index.php");
+                exit();                            
             } 
             else 
             {
@@ -85,7 +106,7 @@ require_once("connect.php");
             }
         } 
 
-        $sql = "SELECT * FROM customer WHERE customer_id = $customer_id";
+        $sql = "SELECT * FROM customer WHERE customer_id = $customerID";
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {

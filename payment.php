@@ -26,7 +26,6 @@ unset($_SESSION["ID"]);
     <div class="main-content">
         <div class="container">
             
-            <?php /*
             <div class="above">
                 <?php
                     if (isset($message)) {
@@ -34,8 +33,7 @@ unset($_SESSION["ID"]);
                     }
                 ?>
             </div>
-            */?>
-            
+        
             <div class="below">
                 <div class="form-container">
                     <?php
@@ -47,7 +45,6 @@ unset($_SESSION["ID"]);
                     $errorCardMissing = 0;
                     $errorShowPayment = 0;
                     
-
                     if (isset($_POST['EditBtn'])) {
                         if (isset($_POST['edit_id']) && !empty($_POST['edit_id'])) {
                             $errorEdit = 0;
@@ -101,12 +98,12 @@ unset($_SESSION["ID"]);
                                 $_SESSION['staff_id'] = $staff_id;
                                 $_SESSION['customer_id'] = $customer_id;
                                 $price *= $quantity;
-                                // Initialize cart session if not already set
+                                
                                 if (!isset($_SESSION['cart'])) {
                                     $_SESSION['cart'] = [];
                                 }
 
-                                // Add product and quantity to cart
+                                
                                 $_SESSION['cart'][] = [
                                     'product_id' => $product_id,
                                     'quantity' => $quantity,
@@ -114,7 +111,6 @@ unset($_SESSION["ID"]);
                                 ];
 
                                 $_SESSION['overall'] += $price;
-
                                 header("Location: payment.php");
                                 exit();
                             }
@@ -142,6 +138,7 @@ unset($_SESSION["ID"]);
                             if ($isInserted) {
                                 $paymentID = $conn->insert_id;
                                 
+                                $_SESSION["message"] = "Payment with ID " . $paymentID . " has been added";
                                 foreach ($_SESSION['cart'] as $item) {
                                     $product_id = $item['product_id'];
                                     $quantity = $item['quantity'];
@@ -215,8 +212,6 @@ unset($_SESSION["ID"]);
                            }
                         ?>
 
-                        
-
                         <input type="submit" name="addCardBtn" value="Add to Card">
                         <input type="submit" name="addPaymentBtn" value="Insert">
                     </form>
@@ -239,7 +234,7 @@ unset($_SESSION["ID"]);
                                 $product_id = $item['product_id'];
                                 $quantity = $item['quantity'];
                                 
-                                // Fetch product details from database
+                                
                                 $sql = "SELECT name FROM product WHERE product_id = $product_id";
                                 $result = $conn->query($sql);
                                 $product = $result->fetch_assoc();
