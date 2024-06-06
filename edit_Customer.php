@@ -62,22 +62,28 @@ require_once("connect.php");
         
         if (isset($_POST['EditBtn']))
         {
+            $customer_id = $_POST['customer_id']
+            $first_name = $_POST['first_name'];
+            $last_name = $_POST['first_name'];
+            $birthDate = $_POST['first_name'];
+            $last_payment = $_POST['first_name'];
+            $allergy = $_POST['first_name'];
+
             $sql = "DELETE FROM customer WHERE customer_id = $customer_id";
             $isDeleted = $conn->query($sql);
 
+
+
             if ($isDeleted) 
             {
-                header("Location: index.php");      
-                exit();                             
+                //header("Location: index.php");      
+                //exit();                             
             } 
             else 
             {
-                echo "Error while deleting user: " . $sql . "<br>" . mysqli_errorCreateor($conn);
+                echo "Error while editing user: " . $sql . "<br>" . mysqli_errorCreateor($conn);
             }
         } 
-
-      
-   
 
         $sql = "SELECT * FROM customer WHERE customer_id = $customer_id";
         $result = $conn->query($sql);
@@ -140,9 +146,9 @@ require_once("connect.php");
     </div>
 </div>
 
-    <?php
+<?php
     require_once("footer.php");
-    ?>
+?>
 
 </body>
 </html>

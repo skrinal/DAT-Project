@@ -53,7 +53,7 @@ unset($_SESSION["ID"]);
                             $_SESSION["permission"] = "yes";
                             $_SESSION["ID"] = $idEdit;
 
-                            header("Location: Update_Delete.php");
+                            header("Location: edit_Customer.php");
                             exit();
                         } else {
                             $errorEdit = 1;
@@ -82,10 +82,10 @@ unset($_SESSION["ID"]);
                                 $createdCustomerID = $conn->query($sql);
                                 
                                 $customerID = $createdCustomerID->fetch_assoc();
-                                echo $customerID["customer_id"];
+                                $_SESSION["message"] = "User with ID " . $customerID['customer_id'] . " has been created";
                                 
-                                //header("Location: index.php");      
-                                //exit();                             
+                                header("Location: index.php");      
+                                exit();                             
                             } else {
                                 echo "errorCreateor: " . $sql . "<br>" . mysqli_errorCreateor($conn);
                             }
@@ -93,25 +93,26 @@ unset($_SESSION["ID"]);
                     }
                     ?>
                     <form class="customer-form" method="POST">
-                        <label for="first_name">First Name</label><br>
-                        <input type="text" id="first_name" name="first_name"><br>
+                        
+                        <label for="first_name">First Name</label>
+                        <input type="text" id="first_name" name="first_name"><br><br>
+                        
+                        <label for="last_name">Last Name</label>
+                        <input type="text" id="last_name" name="last_name"><br><br>
 
-                        <label for="last_name">Last Name</label><br>
-                        <input type="text" id="last_name" name="last_name"><br>
+                        <label for="birthDate">BirthDate</label>
+                        <input type="date" id="birthDate" name="birthDate"><br><br>
 
-                        <label for="birthDate">BirthDate</label><br>
-                        <input type="date" id="birthDate" name="birthDate"><br>
-
-                        <label for="allergy">Allergy (optional)</label><br>
+                        <label for="allergy">Allergy (optional)</label>
                         <input type="text" id="allergy" name="allergy"><br><br>
 
-                        <?php
+                    <?php
                         if ($errorCreate == 1) {
-                        ?>
+                    ?>
                             <p style='color:red'> Niečo ste nevyplnili </p>
-                        <?php
+                    <?php
                         }
-                        ?>
+                    ?>
 
                         <input type="submit" name="addCustomerBtn" value="Create">
                     </form>
@@ -119,62 +120,58 @@ unset($_SESSION["ID"]);
 
                 <div class="sql-table">
                     <?php
-                    $sqlSelect = "SELECT customer_id, first_name, last_name, birthDate, last_payment, allergy FROM customer ORDER BY customer_id DESC LIMIT 10";
+                    $sqlSelect = "SELECT * FROM customer ORDER BY customer_id DESC LIMIT 10";
                     $resultCustomer = $conn->query($sqlSelect);
 
                     if ($resultCustomer->num_rows > 0) {
                         $rows = $resultCustomer->fetch_all(MYSQLI_ASSOC);
-                        ?>
-                            <form method="post">
-                        <?php
-
-                        echo "<table>";
-                        echo "<tr>
-                                <th></th>
-                                <th>Id</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>BirthDay</th>
-                                <th>last_payment</th>
-                                <th>Allergy</th>
-                            </tr>";
-
+                    ?>
+                        <form method="post">
+                            <table>
+                                <tr>
+                                    <th></th>
+                                    <th>Id</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>BirthDay</th>
+                                    <th>last_payment</th>
+                                    <th>Allergy</th>
+                                </tr>
+                    <?php
                         foreach ($rows as $row) {
-                            echo "<tr>";
-                            echo "<td>";
-
-                        ?> 
-                            <input type="radio" id="<?php echo $row["customer_id"]; ?>" name="edit_id" value="<?php echo $row["customer_id"]; ?>">
-                            <label for="<?php echo $row["customer_id"]; ?>">
+                    ?>
+                            <tr>
+                                <td>
+                                    <input type="radio" id="<?php echo $row["customer_id"]; ?>" name="edit_id" value="<?php echo $row["customer_id"]; ?>">
+                                    <label for="<?php echo $row["customer_id"]; ?>">
+                                </td>
+                                <td><?php echo $row["customer_id"]   ?></td>
+                                <td><?php echo $row["first_name"]    ?></td>
+                                <td><?php echo $row["last_name"]     ?></td>
+                                <td><?php echo $row["birthDate"]     ?></td>
+                                <td><?php echo $row["last_payment"]  ?></td>
+                                <td><?php echo $row["allergy"]       ?></td>
+                                    </label>
+                            </tr>
                         <?php
-
-                            echo "</td>";
-                            echo "<td>" . $row["customer_id"] . "</td>";
-                            echo "<td>" . $row["first_name"] . "</td>";
-                            echo "<td>" . $row["last_name"] . "</td>";
-                            echo "<td>" . $row["birthDate"] . "</td>";
-                            echo "<td>" . $row["last_payment"] . "</td>";
-                            echo "<td>" . $row["allergy"] . "</td>";
-                        ?>
-                            </label>
-                        <?php
-                            echo "</tr>";                    
                         }
-                        echo "</table>";
-                        
-                        
                         if ($errorEdit == 1) {
                         ?>
                             <p style='color:red'> Choose customer to edit. </p>
                         <?php
                         }
-                        
-                    } else {
-                        echo "None Customers";
+                    ?>
+                        </table>
+                    <?php
+                    } 
+                    else {
+                    ?>
+                        <p style='color:red'> None Customers. </p>
+                    <?php
                     }
                     ?>
                         <input type="submit" name="EditBtn" value="Edit">
-                        </form>
+                    </form>
                 </div>
                </div>
             </div>
