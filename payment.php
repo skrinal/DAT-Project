@@ -15,6 +15,7 @@ unset($_SESSION["ID"]);
     <meta charset="UTF-8">
     <title>Payment</title>
     <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="style.css?a=<?php echo time();?>">
 </head>
 
 <body>
@@ -40,44 +41,11 @@ unset($_SESSION["ID"]);
                     require_once("connect.php");
 
                     $errorCreate = 0;
-                    $errorEdit = 0;
                     $errorCard = 0;
                     $errorCardMissing = 0;
                     $errorShowPayment = 0;
                     
-                    if (isset($_POST['EditBtn'])) {
-                        if (isset($_POST['edit_id']) && !empty($_POST['edit_id'])) {
-                            $errorEdit = 0;
-                            
-                            $idEdit = $_POST['edit_id'];
-
-                            $_SESSION["permission"] = "yes";
-                            $_SESSION["ID"] = $idEdit;
-
-                            header("Location: edit_Payment.php");
-                            exit();
-                        } else {
-                            $errorEdit = 1;
-                        }
-                    }
-
-                    if (isset($_POST['ShowPaymentBtn'])) {
-                        if (isset($_POST['edit_id']) && !empty($_POST['edit_id'])) {
-                            $errorEdit = 0;
-                            
-                            $idEdit = $_POST['edit_id'];
-
-                            $_SESSION["permission"] = "yes";
-                            $_SESSION["ID"] = $idEdit;
-
-                            header("Location: edit_Payment.php");
-                            exit();
-                        } else {
-                            $errorShowPayment = 1;
-                        }
-                    }
-
-
+                 
                     if(isset($_POST['addCardBtn'])) {
                         $staff_id = $_POST['staff_id'];
                         $customer_id = $_POST['customer_id'];
@@ -89,30 +57,33 @@ unset($_SESSION["ID"]);
                             $errorCard = 1;
                         }
                         else {
-                            if ($staff_id == 0 || $customer_id == 0 || $product_id_price == 0) {
+                            if ($staff_id == 0 || $customer_id == 0 || $product_id_price == -1) {
                                 $errorCardMissing = 1;
                             }
                             else {
                                 list($product_id, $price) = explode(',', $product_id_price);
-
-                                $_SESSION['staff_id'] = $staff_id;
-                                $_SESSION['customer_id'] = $customer_id;
-                                $price *= $quantity;
                                 
-                                if (!isset($_SESSION['cart'])) {
-                                    $_SESSION['cart'] = [];
+                                if (!empty($product_id) || !empty($price)) {
+                                    
+                                    $_SESSION['staff_id'] = $staff_id;
+                                    $_SESSION['customer_id'] = $customer_id;
+                                    $price *= $quantity;
+                                    
+                                    if (!isset($_SESSION['cart'])) {
+                                        $_SESSION['cart'] = [];
+                                    }
+
+                                    $_SESSION['cart'][] = [
+                                        'product_id' => $product_id,
+                                        'quantity' => $quantity,
+                                        'price' => $price
+                                    ];
+
+                                    $_SESSION['overall'] += $price;
+
+                                    header("Location: payment.php");
+                                    exit();
                                 }
-
-                                
-                                $_SESSION['cart'][] = [
-                                    'product_id' => $product_id,
-                                    'quantity' => $quantity,
-                                    'price' => $price
-                                ];
-
-                                $_SESSION['overall'] += $price;
-                                header("Location: payment.php");
-                                exit();
                             }
                         }
                     }
@@ -147,6 +118,10 @@ unset($_SESSION["ID"]);
                                     $result = $conn->query($sql);
                                 }
                                 
+                                $sql = "UPDATE customer SET last_payment = CURDATE() WHERE customer_id = '$customer_id'";
+                                $isUpdated = $conn->query($sql);
+
+
                                 unset($_SESSION['cart']);
                                 unset($_SESSION["staff_id"]);
                                 unset($_SESSION["customer_id"]);
@@ -291,10 +266,7 @@ unset($_SESSION["ID"]);
                                 {
                             ?>
                                 <tr>
-                                    <td>
-                                         <input type="radio" id="<?php echo $row["payment_id"]; ?>" name="edit_id" value="<?php echo $row["payment_id"]; ?>">
-                                        <label for="<?php echo $row["payment_id"]; ?>">
-                                    </td>
+                                    <td></td>
                                     <td> <?php echo $row["payment_id"] ?> </td>
                                     <td> <?php echo $row["staff_id"]  ?> </td>
                                     <td> <?php echo $row["customer_id"]   ?> </td>
@@ -307,17 +279,12 @@ unset($_SESSION["ID"]);
                         ?>
                             </table>
                         <?php
-                            if ($errorEdit == 1) {
-                            ?>
-                                <p style='color:red'> Choose payments to edit. </p>
-                            <?php
-                            }
+                           
                             if ($errorShowPayment == 1) {
                                 ?>
                                     <p style='color:red'> Choose payments to show. </p>
                                 <?php
-                                }
-                            
+                            }
                     }
                     else {
                     ?>
@@ -325,9 +292,7 @@ unset($_SESSION["ID"]);
                     <?php
                     }     
                     ?>
-                        <input type="submit" name="EditBtn" value="Edit">
-                        <input type="submit" name="ShowPaymentBtn" value="Show Payment">
-                        </form>
+                    </form>
                 </div>
                </div>
             </div>

@@ -3,13 +3,13 @@ session_start();
 
 if (!isset($_SESSION["permission"]) || $_SESSION["permission"] !== "yes") {
     // Redirect
-    header("Location: index.php");
+    header("Location: list_customer.php");
     exit();
 }
 
 if (!isset($_SESSION["ID"])) {
     //No customer ID
-    header("Location: index.php");
+    header("Location: list_customer.php");
     exit();
 }
 
@@ -23,6 +23,7 @@ require_once("connect.php");
     <meta charset="UTF-8">
     <title>Update/Delete Customer</title>
     <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="style.css?a=<?php echo time();?>">
 </head>
 <body>
 
@@ -43,7 +44,7 @@ require_once("connect.php");
             {   
                 $_SESSION["message"] = "User with ID $customerID has been deleted";
                 sleep(2);
-                header("Location: index.php");      
+                header("Location: list_customer.php");      
                 exit();                             
             } 
             else 
@@ -71,9 +72,6 @@ require_once("connect.php");
 
             $fieldsToUpdate = [];
 
-            if (!empty($customer_id)) {
-                $fieldsToUpdate[] = "customer_id = '$customer_id'";
-            }
             if (!empty($first_name)) {
                 $fieldsToUpdate[] = "first_name = '$first_name'";
             }
@@ -91,13 +89,13 @@ require_once("connect.php");
             }
 
             $sql = "UPDATE customer SET " . implode(', ', $fieldsToUpdate) . " WHERE customer_id = '$customerID'";
-            $isUpdated = $conn->query($sql);;
+            $isUpdated = $conn->query($sql);
 
 
             if ($isUpdated) 
             {
                 $_SESSION["message"] = "User with ID $customerID has been updated successfully";
-                header("Location: index.php");
+                header("Location: list_customer.php");
                 exit();                            
             } 
             else 
@@ -118,7 +116,6 @@ require_once("connect.php");
             <table>
                 <tr>
                     <th></th>
-                    <th>Id</th>
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>BirthDay</th>
@@ -132,7 +129,6 @@ require_once("connect.php");
             ?>
                 <tr>
                     <td></td>
-                    <td> <?php echo $row["customer_id"] ?> </td>
                     <td> <?php echo $row["first_name"]  ?> </td>
                     <td> <?php echo $row["last_name"]   ?> </td>
                     <td> <?php echo $row["birthDate"]   ?> </td>
@@ -142,7 +138,6 @@ require_once("connect.php");
 
                 <tr>
                     <td></td>
-                    <td><input class="edit-input" type="number" id="customer_id" name="customer_id" ></td>
                     <td><input class="edit-input" type="text" id="first_name" name="first_name" ></td>
                     <td><input class="edit-input" type="text" id="last_name" name="last_name" ></td>
                     <td><input class="edit-input" type="date" id="birthDate" name="birthDate" ></td>

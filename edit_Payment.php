@@ -2,16 +2,16 @@
 session_start();
 
 if (!isset($_SESSION["permission"]) || $_SESSION["permission"] !== "yes") {
-    header("Location: payment.php");
+    header("Location: list_payment.php");
     exit();
 }
 
 if (!isset($_SESSION["ID"])) {
-    header("Location: payment.php");
+    header("Location: list_payment.php");
     exit();
 }
 
-$payment_id = $_SESSION["ID"];
+$payment_ID = $_SESSION["ID"];
 require_once("connect.php");
 
 ?>
@@ -21,6 +21,7 @@ require_once("connect.php");
     <meta charset="UTF-8">
     <title>Update/Delete Payment</title>
     <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="style.css?a=<?php echo time();?>">
 </head>
 <body>
 
@@ -34,18 +35,18 @@ require_once("connect.php");
 
         if (isset($_POST['DeleteBtn']))
         {
-            $sql = "DELETE FROM payment_details WHERE payment_id = $payment_id";
+            $sql = "DELETE FROM payment_details WHERE payment_id = $payment_ID";
             $isDeletedDetails = $conn->query($sql);
             
             if ($isDeletedDetails) 
             {   
-                $sql = "DELETE FROM payment WHERE payment_id = $payment_id";
+                $sql = "DELETE FROM payment WHERE payment_id = $payment_ID";
                 $isDeleted = $conn->query($sql);
 
                 if ($isDeleted) {
-                    $_SESSION["message"] = "Payment with ID $payment_id has been deleted";
+                    $_SESSION["message"] = "Payment with ID $payment_ID has been deleted";
                     sleep(2);
-                    header("Location: payment.php");      
+                    header("Location: list_payment.php");      
                     exit();
                 }
                 else {
@@ -61,7 +62,7 @@ require_once("connect.php");
         else {
         ?>
             <div class="edit-legend">
-                Editing payment with ID <?php echo $payment_id ?>
+                Editing payment with ID <?php echo $payment_ID ?>
             </div>
         <?php
         }  
@@ -69,12 +70,36 @@ require_once("connect.php");
         
         if (isset($_POST['EditBtn']))
         {
-            $sql = "DELETE FROM payment WHERE payment_id = $payment_id";
-            $isDeleted = $conn->query($sql);
+            $staff_id = $_POST['staff_id'];
+            $customer_id = $_POST['customer_id'];
+            $amount = $_POST['amount'];
+            $payment_date = $_POST['payment_date'];
+            $store_address = $_POST['store_address'];
 
-            if ($isDeleted) 
+            $fieldsToUpdate = [];
+
+            if (!empty($staff_id)) {
+                $fieldsToUpdate[] = "staff_id = '$staff_id'";
+            }
+            if (!empty($customer_id)) {
+                $fieldsToUpdate[] = "customer_id = '$customer_id'";
+            }
+            if (!empty($amount)) {
+                $fieldsToUpdate[] = "amount = '$amount'";
+            }
+            if (!empty($payment_date)) {
+                $fieldsToUpdate[] = "payment_date = '$payment_date'";
+            }
+            if (!empty($store_address)) {
+                $fieldsToUpdate[] = "store_address = '$store_address'";
+            }
+
+            $sql = "UPDATE payment SET " . implode(', ', $fieldsToUpdate) . " WHERE payment_id = '$payment_ID'";
+            $isUpdated = $conn->query($sql);
+
+            if ($isUpdated) 
             {
-                header("Location: payment.php");      
+                header("Location: list_payment.php");      
                 exit();                             
             } 
             else 
@@ -86,7 +111,7 @@ require_once("connect.php");
       
    
 
-        $sql = "SELECT * FROM payment WHERE payment_id = $payment_id";
+        $sql = "SELECT * FROM payment WHERE payment_id = $payment_ID";
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
@@ -97,8 +122,7 @@ require_once("connect.php");
         <form method="post">
             <table>
                 <tr>
-                    <th></th>
-                    <th>Id</th>
+                    <th></th>   
                     <th>Staff Id</th>
                     <th>Customer Id</th>
                     <th>Amount</th>
@@ -112,7 +136,6 @@ require_once("connect.php");
             ?>
                 <tr>
                     <td></td>
-                    <td> <?php echo $row["payment_id"] ?> </td>
                     <td> <?php echo $row["staff_id"]  ?> </td>
                     <td> <?php echo $row["customer_id"]   ?> </td>
                     <td> <?php echo $row["amount"]   ?> </td>
@@ -122,7 +145,6 @@ require_once("connect.php");
 
                 <tr>
                     <td></td>
-                    <td><input class="edit-input" type="number" id="payment_id" name="payment_id" ></td>
                     <td><input class="edit-input" type="number" id="staff_id" name="staff_id" ></td>
                     <td><input class="edit-input" type="number" id="customer_id" name="customer_id" ></td>
                     <td><input class="edit-input" type="number" id="amount" name="amount" ></td>

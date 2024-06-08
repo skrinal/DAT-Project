@@ -24,7 +24,7 @@ label  {
     text-align: center;
 }
 
-/* Chatgpt */
+/* */
 .header {
     width: 100%;
     background-color: #333;
@@ -61,9 +61,8 @@ label  {
     align-items: center;
     width: 100%;
     height: 100%;
-    padding: 50px 0; /* height of the header */
+    padding: 15px 0;
 }
-
 
 
 .footer {
@@ -116,10 +115,7 @@ label  {
     margin-top: 10px;
     font-size: 14px;
 }
-
-
-/* Chatgpt */
-
+/* */
 
 
 .container {
@@ -141,10 +137,22 @@ label  {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    font-size: 40px;
+    font-size: 30px;
     color: red;
     font-weight: bold;
 }
+
+.customer-list{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.payment-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
 
 .below {
     display: flex;

@@ -17,7 +17,7 @@ unset($_SESSION["ID"]);
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
+    <title>Customer List</title>
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet" href="style.css?a=<?php echo time();?>">
 </head>
@@ -38,70 +38,28 @@ unset($_SESSION["ID"]);
                 ?>
             </div>
             
-            <div class="below">
-                <div class="form-container">
+            <div class="customer-list">
                     <?php
                     require_once("connect.php");
 
                     $errorCreate = 0;
-                
-                    if (isset($_POST['addCustomerBtn'])) {
-                        $first_name = $_POST['first_name'];
-                        $last_name = $_POST['last_name'];
-                        $birthDate = $_POST['birthDate'];
-                        $allergy = $_POST['allergy'];
+                    $errorEdit = 0;
+                    
+                    if (isset($_POST['EditBtn'])) {
+                        if (isset($_POST['edit_id']) && !empty($_POST['edit_id'])) {
+                            $errorEdit = 0;
+                            
+                            $idEdit = $_POST['edit_id'];
+                            $_SESSION["permission"] = "yes";
+                            $_SESSION["ID"] = $idEdit;
 
-                        if ($first_name == "" || $last_name == "" || $birthDate == "") {
-                            $errorCreate = 1;
+                            header("Location: edit_Customer.php");
+                            exit();
                         } else {
-                            if ($allergy == "") {
-                                $sql = "INSERT INTO customer (first_name, last_name , birthDate) VALUES ('$first_name', '$last_name', '$birthDate')";
-                                $isInserted = $conn->query($sql);       
-                            } else {
-                                $sql = "INSERT INTO customer (first_name, last_name , birthDate, allergy) VALUES ('$first_name', '$last_name', '$birthDate' , '$allergy')";
-                                $isInserted = $conn->query($sql);       
-                            }
-
-                            if ($isInserted) {
-                                $sql = "SELECT customer_id FROM customer WHERE first_name = '$first_name' AND last_name = '$last_name' AND birthDate = '$birthDate'";    
-                                $createdCustomerID = $conn->query($sql);
-                                
-                                $customerID = $createdCustomerID->fetch_assoc();
-                                $_SESSION["message"] = "User with ID " . $customerID['customer_id'] . " has been created";
-                                
-                                header("Location: index.php");      
-                                exit();                             
-                            } else {
-                                echo "errorCreateor: " . $sql . "<br>" . mysqli_errorCreateor($conn);
-                            }
+                            $errorEdit = 1;
                         }
                     }
-                    ?>
-                    <form class="customer-form" method="POST">
-                        
-                        <label for="first_name">First Name</label>
-                        <input type="text" id="first_name" name="first_name"><br><br>
-                        
-                        <label for="last_name">Last Name</label>
-                        <input type="text" id="last_name" name="last_name"><br><br>
-
-                        <label for="birthDate">BirthDate</label>
-                        <input type="date" id="birthDate" name="birthDate"><br><br>
-
-                        <label for="allergy">Allergy (optional)</label>
-                        <input type="text" id="allergy" name="allergy"><br><br>
-
-                    <?php
-                        if ($errorCreate == 1) {
-                    ?>
-                            <p style='color:red'> Niečo ste nevyplnili </p>
-                    <?php
-                        }
-                    ?>
-
-                        <input type="submit" name="addCustomerBtn" value="Create">
-                    </form>
-                </div>
+                ?>
 
                 <div class="sql-table">
                     <?php
@@ -126,7 +84,10 @@ unset($_SESSION["ID"]);
                         foreach ($rows as $row) {
                     ?>
                             <tr>
-                                <td></td>
+                                <td>
+                                    <input type="radio" id="<?php echo $row["customer_id"]; ?>" name="edit_id" value="<?php echo $row["customer_id"]; ?>">
+                                    <label for="<?php echo $row["customer_id"]; ?>">
+                                </td>
                                 <td><?php echo $row["customer_id"]   ?></td>
                                 <td><?php echo $row["first_name"]    ?></td>
                                 <td><?php echo $row["last_name"]     ?></td>
@@ -135,6 +96,11 @@ unset($_SESSION["ID"]);
                                 <td><?php echo $row["allergy"]       ?></td>
                                     </label>
                             </tr>
+                        <?php
+                        }
+                        if ($errorEdit == 1) {
+                        ?>
+                            <p style='color:red'> Choose customer to edit. </p>
                         <?php
                         }
                     ?>
@@ -147,6 +113,7 @@ unset($_SESSION["ID"]);
                     <?php
                     }
                     ?>
+                        <input type="submit" name="EditBtn" value="Edit">
                     </form>
                 </div>
                </div>
